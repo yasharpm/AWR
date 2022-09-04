@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Anarchist Workforce Registry</title>
+
+<style>
+body {
+	font-size: 4.44vmin;
+	color: white;
+	background-color: black;
+	font-family: ebrima;
+	padding: 0vmin;
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+	display: none;
+}
+
+h1 {
+	color: red;
+	font-weight: bold;
+	font-size: 5.55vmin;
+	margin: auto;
+	margin-top: 6.66vmin;
+	margin-bottom: 6.66vmin;
+	display: block;
+	text-align: center;
+}
+
+p {
+	display: block;
+	padding-left: 4.44vmin;
+	padding-right: 4.44vmin;
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+
+.analytics {
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 7.77vmin;
+}
+
+.analytic {
+}
+
+.counter-holder {
+	width: 17.77vmin;
+	height: 17.77vmin;
+	display: flex;
+	margin: auto;
+	border-style: solid;
+	border-color: red;
+	border-width: 1.11vmin;
+	border-radius: 50%;
+	justify-content: center;
+}
+
+.counter {
+	margin: auto;
+	font-size: 5vmin;
+	font-weight: bold;
+}
+
+.counter-title {
+	margin: auto;
+	margin-top: 1.66vmin;
+	font-size: 5vmin;
+	font-weight: bold;
+}
+
+.button {
+	height: 13.33vmin;
+	background-color: red;
+	margin-left: 4.44vmin;
+	margin-right: 4.44vmin;
+	display: flex;
+}
+
+.button-text {
+	margin: auto;
+	font-size: 5vmin;
+	font-weight: bold;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+	
+<body>
+
+<h1>Anarchist Workforce Registry</h1>
+
+<p>List your areas of expertise and mark yourself as available to join teams and collectives that want to make a change.</p>
+<br/>
+<p>The purpose of this registry is to make it possible to form teams of like minded people and move a step closer to coordinate and create greater impacts.</p>
+<br/>
+<p>You don't need to be an Anarchist to register. It is important to understand though that an Anarchist team has a flat structure. We will decide to cooperate because we have similar concerns.</p>
+
+<div class="analytics">
+	<div class="analytic">
+		<div class="counter-holder"><span id="registration-count" class="counter">..</span></div>
+		<span class="counter-title">Registrations</span>
+	</div>
+	<div class="analytic"></div>
+	<div class="analytic">
+		<div class="counter-holder"><span id="profession-count" class="counter">..</span></div>
+		<span class="counter-title">Professions</span>
+	</div>
+	<div class="analytic"></div>
+</div>
+
+<div class="button" onClick="window.open('/register','_self')" style="margin-top:7.77vmin; margin-bottom: 3.33vmin;">
+	<span class="button-text">REGISTER</span>
+</div>
+
+<div class="button" onClick="window.open('/browse','_self')" style="margin-bottom: 4.44vmin;">
+	<span class="button-text">BROWSE</span>
+</div>
+
+<script>
+	axios.get('/analytics').then(response => {
+		document.getElementById('registration-count').innerHTML = response.data.registration_count;
+		document.getElementById('profession-count').innerHTML = response.data.prefession_count;
+	});
+</script>
+
+</body>
+
+</html>

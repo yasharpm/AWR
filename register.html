@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Anarchist Workforce Registry</title>
+
+<style>
+body {
+	position: relative;
+	font-size: 4.44vmin;
+	color: white;
+	background-color: black;
+	font-family: ebrima;
+	padding: 0vmin;
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+	display: none;
+}
+
+h1 {
+	color: red;
+	font-weight: bold;
+	font-size: 5.55vmin;
+	margin: auto;
+	margin-top: 6.66vmin;
+	margin-bottom: 6.66vmin;
+	display: block;
+	text-align: center;
+}
+
+.input-title {
+	margin-left: 4.44vmin;
+	font-weight: bold;
+	display: block;
+}
+
+.input {
+	width: 91.11vmin;
+	margin-left: 4.44vmin;
+	margin-top: 2.22vmin;
+	display: block;
+	font-size: 4.44vmin;
+	color: white;
+	background: none;
+	border: 0;
+	outline: 0;
+}
+
+.input-line {
+	display: flex;
+	align-items: end;
+	height: 0.55vmin;;
+	background: red;
+	margin-top: 1.11vmin;
+	margin-left: 4.44vmin;
+	margin-right: 4.44vmin;
+	margin-bottom: 10vmin;
+}
+
+.add-button {
+	width: 6.66vmin;
+	height: 6.66vmin;
+	color: red;
+	margin-left: auto;
+}
+
+.tag-container {
+	display: flex;
+	flex-flow: wrap;
+	margin-left: 4.44vmin;
+	margin-right: 4.44vmin;
+	margin-bottom: 10vmin;
+}
+
+.tag {
+	display: flex;
+	flex-direction: row;
+	border-style: solid;
+	border-color: red;
+	border-width: 0.55vmin;
+	border-radius: 1.66vmin;
+	padding: 0.55vmin;
+	width: fit-content;
+	margin-right: 0.55vmin;
+	margin-bottom: 0.55vmin;
+}
+
+.remove-button {
+	display: block;
+	width: 4.44vmin;
+	height: 4.44vmin;
+	color: red;
+}
+
+.tag-text {
+	display: block;
+	color: red;
+	font-size: 3.33vmin;
+	white-space: nowrap;
+}
+
+.info {
+	font-size: 3.33vmin;
+	margin: 0;
+	margin-bottom: 10vmin;
+	margin-left: 4.44vmin;
+	margin-right: 4.44vmin;
+}
+
+.button {
+	height: 13.33vmin;
+	background-color: red;
+	margin-left: 4.44vmin;
+	margin-right: 4.44vmin;
+	display: flex;
+}
+
+.button-text {
+	margin: auto;
+	font-size: 5vmin;
+	font-weight: bold;
+}
+
+
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  color: black;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  /*top: 100%;*/
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+	
+<body>
+
+<h1>Register yourself</h1>
+
+<span class="input-title">Name</span>
+<input id="name" class="input" type="text" placeholder="Display name"/>
+<div class="input-line"></div>
+
+<span class="input-title">Short introduction</span>
+<textarea id="info" class="input" rows="3" placeholder="Who you are and what you do"></textarea>
+<div class="input-line"></div>
+
+<span class="input-title">Professions</span>
+<input id="tag-input" class="input" onInput="onTagInputChanged()" type="text" placeholder="ex: Software engineer"/>
+<div class="input-line" style="margin-bottom: 4.44vmin;">
+	<svg class="add-button" onclick="addTag()" viewBox="0 0 24 24">
+		<path fill="currentColor" d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+	</svg>
+</div>
+<div id="suggestions"></div>
+<div id="tag-container" class="tag-container">
+	<div class="tag" style="display: none;">
+		<svg id="remove-button-base" class="remove-button" onClick="removeTag(this)" viewBox="0 0 24 24">
+			<path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" />
+		</svg>
+		<span class="tag-text">Software engineer</span>
+	</div>
+</div>
+
+<span class="input-title">Contact link</span>
+<input id="url" class="input" type="text" placeholder="How can they reach you"/>
+<div class="input-line"></div>
+
+<span class="input-title">Password</span>
+<input id="password" class="input" type="password" placeholder="Passwords are kept only salted and hashed"/>
+<div class="input-line" style="margin-bottom: 1.11vmin;"></div>
+<p class="info">You can modify your registration later using this password. Your username will be your contact link.</p>
+
+<div class="button" onClick="register()" style="margin-bottom: 1.11vmin;">
+	<span class="button-text">REGISTER</span>
+</div>
+<p class="info" style="margin-bottom: 4.44vmin;">Already registered? Click here to modify your registration.</p>
+
+<script>
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  var a, b, i, val = inp.value;
+  /*close any already open lists of autocompleted values*/
+  closeAllLists();
+  if (!val) { return false;}
+  currentFocus = -1;
+  /*create a DIV element that will contain the items (values):*/
+  a = document.createElement("DIV");
+  a.setAttribute("id", inp.id + "autocomplete-list");
+  a.setAttribute("class", "autocomplete-items");
+  /*append the DIV element as a child of the autocomplete container:*/
+  //inp.parentNode.appendChild(a);
+  document.getElementById('suggestions').appendChild(a);
+  /*for each item in the array...*/
+  for (i = 0; i < arr.length; i++) {
+	  /*create a DIV element for each matching element:*/
+	  b = document.createElement("DIV");
+	  /*make the matching letters bold:*/
+	  b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+	  b.innerHTML += arr[i].substr(val.length);
+	  /*insert a input field that will hold the current array item's value:*/
+	  b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+	  /*execute a function when someone clicks on the item value (DIV element):*/
+		  b.addEventListener("click", function(e) {
+		  /*insert the value for the autocomplete text field:*/
+		  inp.value = this.getElementsByTagName("input")[0].value;
+		  /*close the list of autocompleted values,
+		  (or any other open lists of autocompleted values:*/
+		  closeAllLists();
+		  addTag();
+	  });
+	  a.appendChild(b);
+  }
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+var tagInputTimeout = -1;
+
+function onTagInputChanged() {
+	clearTimeout(tagInputTimeout);
+
+	tagInputTimeout = setTimeout(() => {
+		const tag = document.getElementById("tag-input");
+		const tagValue = tag.value;
+
+		axios.get('/tags?q=' + tagValue).then(options => {
+			autocomplete(tag, options.data);
+		});
+		
+		autocomplete(tag, ['sdasdsa','asdsadada']);
+	}, 500);
+}
+
+function addTag() {
+    let tagValue = document.getElementById("tag-input").value;
+
+	tagValue = tagValue.trim();
+
+	if (tagValue.length < 5) {
+		return;
+	}
+
+	const container = document.getElementById("tag-container");
+	
+	const tag = document.createElement("div");
+	tag.className = "tag";
+
+	const removeButton = document.getElementById("remove-button-base").cloneNode(true);
+	tag.appendChild(removeButton);
+
+	const tagText = document.createElement("span");
+	tagText.className = "tag-text";
+	tagText.innerHTML = tagValue;
+	tag.appendChild(tagText);
+
+	container.appendChild(tag);
+
+	document.getElementById("tag-input").value = "";
+}
+
+function removeTag(removeButton) {
+	const tag = removeButton.parentElement;
+	const container = tag.parentElement;
+	container.removeChild(tag);
+}
+
+function buf2hex(buffer) { // buffer is an ArrayBuffer
+  return [...new Uint8Array(buffer)]
+      .map(x => x.toString(16).padStart(2, '0'))
+      .join('');
+}
+
+async function register() {
+	const name = document.getElementById('name').value;
+	const info = document.getElementById('info').value;
+	const tags = [];
+	
+	const tagContainer = document.getElementById('tag-container');
+	
+	const tagTexts = tagContainer.getElementsByClassName('tag-text');
+	
+	for (let i=1; i < tagTexts.length; i++) {
+		tags.push(tagTexts[i].innerHTML);
+	};
+	
+	const url = document.getElementById('url').value;
+	
+	const password = document.getElementById('password').value;
+	const passwordBytes = new TextEncoder('utf-8').encode(password);
+	const salt = Math.random().toString(16).substr(2, 12);
+	const saltBytes = new TextEncoder('utf-8').encode(salt);
+	const mixture = new Uint8Array(passwordBytes.length + saltBytes.length);
+	mixture.set(passwordBytes, 0);
+	mixture.set(saltBytes, passwordBytes.length);
+	const hash = await window.crypto.subtle.digest('SHA-256', mixture);
+	const hashHex = buf2hex(hash);
+	
+	const entry = {
+		name: name,
+		info: info,
+		tags: tags,
+		url: url,
+		salt: salt,
+		password: hashHex
+	};
+	
+	axios.post('/register', entry).then(response => {
+		alert('You have registered!');
+		window.open('/','_self');
+	}).catch(error => {
+		alert(error.response.data.message);
+	});
+}
+</script>
+
+</body>
+
+</html>
