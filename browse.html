@@ -128,7 +128,7 @@ h1 {
 
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 
 </head>
 	
@@ -175,14 +175,24 @@ function doSearch() {
 	const tagValue = input.value.trim();
 	
 	if (tagValue.length == 0) {
+		const list = document.getElementById("list");
+		
+		while (list.children.length > 1) {
+			list.children[1].remove();
+		}
 		return;
 	}
 	
 	axios.get('/search?q=' + tagValue).then(response => {
-		response.data.forEach((entry, index, arr) => {
-			const list = document.getElementById("list");
-			const item = document.getElementById("base-item").cloneNode(true);
+		const list = document.getElementById("list");
+		
+		while (list.children.length > 1) {
+			list.children[1].remove();
+		}
+		
+		const item = document.getElementById("base-item").cloneNode(true);
 			
+		response.data.forEach((entry, index, arr) => {
 			item.className = 'item';
 			item.setAttribute('onClick', "openPage('" + entry.url + "')");
 			item.getElementsByClassName('item-title')[0].innerHTML = entry.name;

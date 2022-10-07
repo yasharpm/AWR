@@ -155,7 +155,7 @@ h1 {
 }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 
 </head>
 	
@@ -309,8 +309,6 @@ function onTagInputChanged() {
 		axios.get('/tags?q=' + tagValue).then(options => {
 			autocomplete(tag, options.data);
 		});
-		
-		autocomplete(tag, ['sdasdsa','asdsadada']);
 	}, 500);
 }
 
